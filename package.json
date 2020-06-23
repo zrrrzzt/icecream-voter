@@ -1,0 +1,39 @@
+{
+  "name": "icecream-voter",
+  "version": "1.0.0",
+  "description": "Rate your icecream",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard && ava",
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "standard-fix": "standard --fix",
+    "refresh": "rm -rf node_modules && rm package-lock.json && npm i"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zrrrzzt/icecream-voter.git"
+  },
+  "keywords": [],
+  "author": "Geir Gåsodden <geir.gasodden@pythonia.no> (https://github.com/zrrrzzt)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zrrrzzt/icecream-voter/issues"
+  },
+  "homepage": "https://github.com/zrrrzzt/icecream-voter#readme",
+  "dependencies": {
+    "next": "9.4.4",
+    "postcss-preset-env": "6.7.0",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "tailwindcss": "1.4.6"
+  },
+  "devDependencies": {
+    "ava": "3.9.0",
+    "standard": "14.3.4"
+  },
+  "engines": {
+    "node": ">=12.18.1"
+  }
+}
