@@ -1,10 +1,11 @@
 import getIcecream from '../lib/get-icecream'
 
 const Details = ({ icecream }) => {
-  const { id, name, producer, image } = icecream
+  const { name, producer, image } = icecream
   return (
     <div className='flex flex-col items-center'>
-      <h1 className='text-4xl font-mono'>{ name }</h1>
+      <h1 className='text-4xl font-mono'>{name}</h1>
+      <p>{producer}</p>
       <img src={`/images/${image}`} />
     </div>
   )
