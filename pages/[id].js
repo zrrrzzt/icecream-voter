@@ -1,8 +1,10 @@
 import getIcecream from '../lib/get-icecream'
+import VoteCard from '../components/vote'
 
 const Details = ({ icecream }) => {
   const { name, producer, image } = icecream
   return (
+    <>
     <div className='flex flex-col items-center'>
       <h1 className='text-4xl font-mono'>{name}</h1>
       <div class='max-w-sm rounded overflow-hidden shadow-lg'>
@@ -14,7 +16,9 @@ const Details = ({ icecream }) => {
             </p>
           </div>
         </div>
+        <VoteCard />
     </div>
+    </>
   )
 }
 
