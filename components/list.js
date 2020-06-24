@@ -5,13 +5,13 @@ const ListItem = props => {
   return (
     <Link href={`/${id}`} key={id}>
       <a className='cursor-pointer'>
-        <div className='flex h-48'>
-          <div>
-            <img src={`images/${image}`} className='h-48' />
-          </div>
-          <div className='flex flex-col justify-center h-full'>
-            <h2 className='text-3xl'>{name}</h2>
-            <div>{producer}</div>
+        <div class='max-w-sm rounded overflow-hidden shadow-lg'>
+          <img class='w-full' src={`images/${image}`} alt={name} />
+          <div class='px-6 py-4'>
+            <div class='font-bold text-xl mb-2'>{name}</div>
+            <p class='text-gray-700 text-base'>
+              {producer}
+            </p>
           </div>
         </div>
       </a>
