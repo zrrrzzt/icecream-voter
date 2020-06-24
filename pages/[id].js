@@ -5,8 +5,15 @@ const Details = ({ icecream }) => {
   return (
     <div className='flex flex-col items-center'>
       <h1 className='text-4xl font-mono'>{name}</h1>
-      <p>{producer}</p>
-      <img src={`/images/${image}`} />
+      <div class='max-w-sm rounded overflow-hidden shadow-lg'>
+          <img class='w-full' src={`images/${image}`} alt={name} />
+          <div class='px-6 py-4'>
+            <div class='font-bold text-xl mb-2'>{name}</div>
+            <p class='text-gray-700 text-base'>
+              {producer}
+            </p>
+          </div>
+        </div>
     </div>
   )
 }
