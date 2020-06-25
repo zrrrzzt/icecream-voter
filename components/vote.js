@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { addVote } from '../lib/firestore-service'
 
 const VoteCard = props => {
-  const { id, setVoted } = props
+  const { id, setVoted, user } = props
   const [smak, setSmak] = useState(50)
   const [trekk, setTrekk] = useState(50)
   const [holdbarhet, setHoldbarhet] = useState(50)
@@ -15,7 +15,9 @@ const VoteCard = props => {
       trekk,
       holdbarhet,
       helhet,
-      anbefalt
+      anbefalt,
+      user: user.email,
+      image: user.image
     }
     addVote(vote, id)
     setVoted(true)

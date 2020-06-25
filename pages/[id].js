@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/client'
 import * as FirestoreService from '../lib/firestore-service'
 import getIcecream from '../lib/get-icecream'
+import LoginButton from '../components/login-button'
+import LoggedInCard from '../components/logged-in-card'
 import VoteCard from '../components/vote'
 import VoteReceived from '../components/vote-received'
 
 const Details = ({ icecream }) => {
   const { id, name, producer, image } = icecream
+  const [ session, loading ] = useSession()
   const [votes, setVotes] = useState()
   const [voted, setVoted] = useState(false)
 
@@ -38,7 +42,9 @@ const Details = ({ icecream }) => {
           </div>
           {voted && <VoteReceived />}
         </div>
-        {!voted && <VoteCard id={id} setVoted={setVoted} />}
+        {!voted && session ? <VoteCard id={id} setVoted={setVoted} user={session.user} /> : null}
+        {!session && <LoginButton />}
+        {session && <LoggedInCard user={session.user} />}
     </div>
     </>
   )
