@@ -9,7 +9,7 @@ import VoteReceived from '../components/vote-received'
 
 const Details = ({ icecream }) => {
   const { id, name, producer, image } = icecream
-  const [ session, loading ] = useSession()
+  const [session, loading] = useSession()
   const [votes, setVotes] = useState()
   const [voted, setVoted] = useState(false)
 
@@ -27,9 +27,9 @@ const Details = ({ icecream }) => {
 
   return (
     <>
-    <div className='flex flex-col items-center'>
-      <h1 className='text-4xl font-mono'>{name}</h1>
-      <div className='max-w-sm rounded overflow-hidden shadow-lg'>
+      <div className='flex flex-col items-center'>
+        <h1 className='text-4xl font-mono'>{name}</h1>
+        <div className='max-w-sm rounded overflow-hidden shadow-lg'>
           <img className='w-full' src={`images/${image}`} alt={name} />
           <div className='px-6 py-4'>
             <div className='font-bold text-xl mb-2'>{name}</div>
@@ -45,7 +45,7 @@ const Details = ({ icecream }) => {
         {!voted && session ? <VoteCard id={id} setVoted={setVoted} user={session.user} /> : null}
         {!session && <LoginButton />}
         {session && <LoggedInCard user={session.user} />}
-    </div>
+      </div>
     </>
   )
 }
