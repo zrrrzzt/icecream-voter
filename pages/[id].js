@@ -6,6 +6,7 @@ import VoteCard from '../components/vote'
 const Details = ({ icecream }) => {
   const { id, name, producer, image } = icecream
   const [votes, setVotes] = useState()
+  const [voted, setVoted] = useState(false)
 
   useEffect(() => {
     FirestoreService.getVotes(id).then(votes => {
@@ -35,7 +36,7 @@ const Details = ({ icecream }) => {
             <span class='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700'>68/100</span>
           </div>
         </div>
-        <VoteCard />
+        {!voted && <VoteCard id={id} setVoted={setVoted} />}
     </div>
     </>
   )

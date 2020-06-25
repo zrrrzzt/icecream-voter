@@ -1,11 +1,25 @@
 import { useState } from 'react'
+import { addVote } from '../lib/firestore-service'
 
-const VoteCard = () => {
+const VoteCard = props => {
+  const { id, setVoted } = props
   const [smak, setSmak] = useState(50)
   const [trekk, setTrekk] = useState(50)
   const [holdbarhet, setHoldbarhet] = useState(50)
   const [helhet, setHelhet] = useState(50)
   const [anbefalt, setAnbefalt] = useState(50)
+
+  const handleVote = () => {
+    const vote = {
+      smak,
+      trekk,
+      holdbarhet,
+      helhet,
+      anbefalt
+    }
+    addVote(vote, id)
+    setVoted(true)
+  }
 
   return (
     <div className='max-w-sm w-full rounded overflow-hidden shadow-lg'>
@@ -32,7 +46,7 @@ const VoteCard = () => {
           <input type='range' min='0' max='100' className='w-full' name='anbefalt' id='anbefalt' onChange={event => setAnbefalt(event.target.valueAsNumber)} />
         </div>
         <div className='flex justify-end'>
-          <button className='bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded'>
+          <button onClick={handleVote} className='bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded'>
             Stem
           </button>
         </div>
