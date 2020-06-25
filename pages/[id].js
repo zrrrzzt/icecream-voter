@@ -1,8 +1,24 @@
+import { useState, useEffect } from 'react'
+import * as FirestoreService from '../lib/firestore-service'
 import getIcecream from '../lib/get-icecream'
 import VoteCard from '../components/vote'
 
 const Details = ({ icecream }) => {
-  const { name, producer, image } = icecream
+  const { id, name, producer, image } = icecream
+  const [votes, setVotes] = useState()
+
+  useEffect(() => {
+    FirestoreService.getVotes(id).then(votes => {
+      if (!votes.empty) {
+        console.log(votes)
+        setVotes(votes)
+      } else {
+        console.log('no votes')
+        setVotes()
+      }
+    }).catch(console.error)
+  }, [id, setVotes])
+
   return (
     <>
     <div className='flex flex-col items-center'>
