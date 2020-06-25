@@ -17,7 +17,8 @@ const VoteCard = props => {
       helhet,
       anbefalt,
       user: user.email,
-      image: user.image
+      image: user.image,
+      name: user.name
     }
     addVote(vote, id)
     setVoted(true)
