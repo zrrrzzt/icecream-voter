@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/client'
 import * as FirestoreService from '../lib/firestore-service'
 import getIcecream from '../lib/get-icecream'
 import calculateScore from '../lib/calculate-score'
+import userHasVoted from '../lib/has-voted'
 import LoginButton from '../components/login-button'
 import LoggedInCard from '../components/logged-in-card'
 import VoteCard from '../components/vote'
@@ -14,14 +15,22 @@ const Details = ({ icecream }) => {
   const [score, setScore] = useState(0)
   const [voted, setVoted] = useState(false)
 
-  useEffect(() => {
+  const loadScore = () => {
     FirestoreService.getVotes(id).then(votes => {
       if (!votes.empty) {
         const score = calculateScore(votes.docs)
         setScore(score)
+        if (session) {
+          const hasVoted = userHasVoted(session.user.email, votes.docs)
+          setVoted(hasVoted)
+        }
       }
-    }).catch(console.error)
-  }, [id, setScore])
+    }).catch(console.error) 
+  }
+
+  useEffect(() => {
+    loadScore()
+  })
 
   return (
     <>
@@ -40,7 +49,7 @@ const Details = ({ icecream }) => {
           </div>
           {voted && <VoteReceived />}
         </div>
-        {!voted && session ? <VoteCard id={id} setVoted={setVoted} user={session.user} /> : null}
+        {!voted && session ? <VoteCard id={id} setVoted={setVoted} loadScore={loadScore} user={session.user} /> : null}
         {!session && <LoginButton />}
         {session && <LoggedInCard user={session.user} />}
       </div>
