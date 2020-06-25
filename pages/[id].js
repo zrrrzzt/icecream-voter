@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/client'
 import * as FirestoreService from '../lib/firestore-service'
 import getIcecream from '../lib/get-icecream'
+import calculateScore from '../lib/calculate-score'
 import LoginButton from '../components/login-button'
 import LoggedInCard from '../components/logged-in-card'
 import VoteCard from '../components/vote'
@@ -10,20 +11,17 @@ import VoteReceived from '../components/vote-received'
 const Details = ({ icecream }) => {
   const { id, name, producer, image } = icecream
   const [session, loading] = useSession()
-  const [votes, setVotes] = useState()
+  const [score, setScore] = useState(0)
   const [voted, setVoted] = useState(false)
 
   useEffect(() => {
     FirestoreService.getVotes(id).then(votes => {
       if (!votes.empty) {
-        console.log(votes)
-        setVotes(votes)
-      } else {
-        console.log('no votes')
-        setVotes()
+        const score = calculateScore(votes.docs)
+        setScore(score)
       }
     }).catch(console.error)
-  }, [id, setVotes])
+  }, [id, setScore])
 
   return (
     <>
@@ -38,7 +36,7 @@ const Details = ({ icecream }) => {
             </p>
           </div>
           <div className='flex justify-end px-6 py-4'>
-            <span className='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700'>68/100</span>
+            <span className='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700'>{score}/100</span>
           </div>
           {voted && <VoteReceived />}
         </div>
