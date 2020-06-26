@@ -14,12 +14,14 @@ const Details = ({ icecream }) => {
   const [session, loading] = useSession()
   const [score, setScore] = useState(0)
   const [voted, setVoted] = useState(false)
+  const [voters, setVoters] = useState(0)
 
   const loadScore = () => {
     FirestoreService.getVotes(id).then(votes => {
       if (!votes.empty) {
         const score = calculateScore(votes.docs)
         setScore(score)
+        setVoters(votes.docs.length)
         if (session) {
           const hasVoted = userHasVoted(session.user.email, votes.docs)
           setVoted(hasVoted)
@@ -45,7 +47,8 @@ const Details = ({ icecream }) => {
             </p>
           </div>
           <div className='flex justify-end px-6 py-4'>
-            <span className='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700'>{score}/100</span>
+            <span className='inline-block bg-gray-200 rounded-full px-3 py-1 mr-2 text-sm font-semibold text-gray-700'>{voters} stemmer</span>
+            <span className='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700'>{score}/100 poeng</span>
           </div>
           {voted && <VoteReceived />}
         </div>
