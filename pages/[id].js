@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/client'
 import * as FirestoreService from '../lib/firestore-service'
 import getIcecream from '../lib/get-icecream'
+import getHighestVote from '../lib/get-highest-vote'
 import calculateScore from '../lib/calculate-score'
 import userHasVoted from '../lib/has-voted'
 import getMyVote from '../lib/get-my-vote'
+import HighestVote from '../components/highest-vote'
 import LoginButton from '../components/login-button'
 import LoggedInCard from '../components/logged-in-card'
 import ShowMyVote from '../components/show-my-vote'
@@ -17,6 +19,7 @@ const Details = ({ icecream }) => {
   const [voted, setVoted] = useState(false)
   const [myVote, setMyVote] = useState(false)
   const [voters, setVoters] = useState(0)
+  const [highestVote, setHighestVote] = useState()
 
   const loadScore = () => {
     FirestoreService.getVotes(id).then(votes => {
@@ -24,6 +27,7 @@ const Details = ({ icecream }) => {
         const score = calculateScore(votes.docs)
         setScore(score)
         setVoters(votes.docs.length)
+        setHighestVote(getHighestVote(votes.docs))
         if (session) {
           const hasVoted = userHasVoted(session.user.email, votes.docs)
           const myVote = getMyVote(session.user.email, votes.docs)
@@ -57,8 +61,9 @@ const Details = ({ icecream }) => {
             <span className='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700'>{score}/100 poeng</span>
           </div>
         </div>
-        {myVote && <ShowMyVote {...myVote} />}
         {!voted && session ? <VoteCard id={id} setVoted={setVoted} loadScore={loadScore} user={session.user} /> : null}
+        {highestVote && <HighestVote {...highestVote} />}
+        {myVote && <ShowMyVote {...myVote} />}
         {!session && <LoginButton />}
         {session && <LoggedInCard user={session.user} />}
       </div>
