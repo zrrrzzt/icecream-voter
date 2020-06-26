@@ -8,7 +8,7 @@ const VoteCard = props => {
   const [holdbarhet, setHoldbarhet] = useState(50)
   const [helhet, setHelhet] = useState(50)
   const [anbefalt, setAnbefalt] = useState(50)
-  const totalt = useMemo(() => Math.floor((smak + trekk + holdbarhet + helhet + anbefalt) / 5))
+  const totalt = useMemo(() => Math.floor((smak + trekk + holdbarhet + helhet + anbefalt) / 5), [smak, trekk, holdbarhet, helhet, anbefalt])
 
   const handleVote = () => {
     const vote = {
