@@ -11,7 +11,7 @@ import VoteReceived from '../components/vote-received'
 
 const Details = ({ icecream }) => {
   const { id, name, producer, image } = icecream
-  const [session, loading] = useSession()
+  const [session] = useSession()
   const [score, setScore] = useState(0)
   const [voted, setVoted] = useState(false)
   const [voters, setVoters] = useState(0)
@@ -27,7 +27,7 @@ const Details = ({ icecream }) => {
           setVoted(hasVoted)
         }
       }
-    }).catch(console.error) 
+    }).catch(console.error)
   }
 
   useEffect(() => {
