@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { addVote } from '../lib/firestore-service'
 
 const VoteCard = props => {
@@ -8,6 +8,7 @@ const VoteCard = props => {
   const [holdbarhet, setHoldbarhet] = useState(50)
   const [helhet, setHelhet] = useState(50)
   const [anbefalt, setAnbefalt] = useState(50)
+  const totalt = useMemo(() => Math.floor((smak + trekk + holdbarhet + helhet + anbefalt) / 5))
 
   const handleVote = () => {
     const vote = {
@@ -49,6 +50,10 @@ const VoteCard = props => {
         <div>
           <label htmlFor='anbefalt'>Anbefalt til en venn? ({anbefalt})</label>
           <input type='range' min='0' max='100' className='w-full' name='anbefalt' id='anbefalt' onChange={event => setAnbefalt(event.target.valueAsNumber)} />
+        </div>
+        <div className='flex justify-between mb-4'>
+          <span>Totalt</span>
+          <span className='font-bold'>{totalt}</span>
         </div>
         <div className='flex justify-end'>
           <button onClick={handleVote} className='bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded'>
