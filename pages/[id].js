@@ -4,16 +4,18 @@ import * as FirestoreService from '../lib/firestore-service'
 import getIcecream from '../lib/get-icecream'
 import calculateScore from '../lib/calculate-score'
 import userHasVoted from '../lib/has-voted'
+import getMyVote from '../lib/get-my-vote'
 import LoginButton from '../components/login-button'
 import LoggedInCard from '../components/logged-in-card'
+import ShowMyVote from '../components/show-my-vote'
 import VoteCard from '../components/vote'
-import VoteReceived from '../components/vote-received'
 
 const Details = ({ icecream }) => {
   const { id, name, producer, image } = icecream
   const [session] = useSession()
   const [score, setScore] = useState(0)
   const [voted, setVoted] = useState(false)
+  const [myVote, setMyVote] = useState(false)
   const [voters, setVoters] = useState(0)
 
   const loadScore = () => {
@@ -24,7 +26,11 @@ const Details = ({ icecream }) => {
         setVoters(votes.docs.length)
         if (session) {
           const hasVoted = userHasVoted(session.user.email, votes.docs)
+          const myVote = getMyVote(session.user.email, votes.docs)
           setVoted(hasVoted)
+          if (myVote) {
+            setMyVote(myVote)
+          }
         }
       }
     }).catch(console.error)
@@ -50,8 +56,8 @@ const Details = ({ icecream }) => {
             <span className='inline-block bg-gray-200 rounded-full px-3 py-1 mr-2 text-sm font-semibold text-gray-700'>{voters} stemmer</span>
             <span className='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700'>{score}/100 poeng</span>
           </div>
-          {voted && <VoteReceived />}
         </div>
+        {myVote && <ShowMyVote {...myVote} />}
         {!voted && session ? <VoteCard id={id} setVoted={setVoted} loadScore={loadScore} user={session.user} /> : null}
         {!session && <LoginButton />}
         {session && <LoggedInCard user={session.user} />}
