@@ -25,26 +25,26 @@ const Details = ({ icecream }) => {
 
   useEffect(() => {
     const unsubscribe = FirestoreService.streamVotes(id, {
-        next: querySnapshot => {
-            const updatedVotes = 
+      next: querySnapshot => {
+        const updatedVotes =
                 querySnapshot.docs.map(docSnapshot => docSnapshot.data())
-            setVotes(updatedVotes)
-            setScore(calculateScore(updatedVotes))
-            setVoters(updatedVotes.length)
-            setHighestVote(getHighestVote(updatedVotes))
-            if (session) {
-              const hasVoted = userHasVoted(session.user.email, updatedVotes)
-              const myVote = getMyVote(session.user.email, updatedVotes)
-              setVoted(hasVoted)
-              if (myVote) {
-                setMyVote(myVote)
-              }
-            }
-        },
-        error: () => setError('icecream-list-item-fail')
-    });
-    return unsubscribe;
-  }, [id, setVotes]);
+        setVotes(updatedVotes)
+        setScore(calculateScore(updatedVotes))
+        setVoters(updatedVotes.length)
+        setHighestVote(getHighestVote(updatedVotes))
+        if (session) {
+          const hasVoted = userHasVoted(session.user.email, updatedVotes)
+          const myVote = getMyVote(session.user.email, updatedVotes)
+          setVoted(hasVoted)
+          if (myVote) {
+            setMyVote(myVote)
+          }
+        }
+      },
+      error: () => setError('icecream-list-item-fail')
+    })
+    return unsubscribe
+  }, [id, setVotes])
 
   return (
     <>
