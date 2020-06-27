@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useSession } from 'next-auth/client'
 import * as FirestoreService from '../lib/firestore-service'
 import getIcecream from '../lib/get-icecream'
@@ -6,6 +6,7 @@ import getHighestVote from '../lib/get-highest-vote'
 import calculateScore from '../lib/calculate-score'
 import userHasVoted from '../lib/has-voted'
 import getMyVote from '../lib/get-my-vote'
+import Error from '../components/error'
 import HighestVote from '../components/highest-vote'
 import LoginButton from '../components/login-button'
 import LoggedInCard from '../components/logged-in-card'
@@ -15,34 +16,35 @@ import VoteCard from '../components/vote'
 const Details = ({ icecream }) => {
   const { id, name, producer, image } = icecream
   const [session] = useSession()
+  const [votes, setVotes] = useState([])
+  const [error, setError] = useState()
   const [score, setScore] = useState(0)
   const [voted, setVoted] = useState(false)
   const [myVote, setMyVote] = useState(false)
-  const [voters, setVoters] = useState(0)
   const [highestVote, setHighestVote] = useState()
+  const voters = useMemo(() => votes.length, [votes])
 
-  const loadScore = () => {
-    FirestoreService.getVotes(id).then(votes => {
-      if (!votes.empty) {
-        const score = calculateScore(votes.docs)
-        setScore(score)
-        setVoters(votes.docs.length)
-        setHighestVote(getHighestVote(votes.docs))
+  useEffect(() => {
+    const unsubscribe = FirestoreService.streamVotes(id, {
+      next: querySnapshot => {
+        const updatedVotes =
+                querySnapshot.docs.map(docSnapshot => docSnapshot.data())
+        setVotes(updatedVotes)
+        setScore(calculateScore(updatedVotes))
+        setHighestVote(getHighestVote(updatedVotes))
         if (session) {
-          const hasVoted = userHasVoted(session.user.email, votes.docs)
-          const myVote = getMyVote(session.user.email, votes.docs)
+          const hasVoted = userHasVoted(session.user.email, updatedVotes)
+          const myVote = getMyVote(session.user.email, updatedVotes)
           setVoted(hasVoted)
           if (myVote) {
             setMyVote(myVote)
           }
         }
-      }
-    }).catch(console.error)
-  }
-
-  useEffect(() => {
-    loadScore()
-  })
+      },
+      error: () => setError('icecream-list-item-fail')
+    })
+    return unsubscribe
+  }, [id, setVotes])
 
   return (
     <>
@@ -61,11 +63,12 @@ const Details = ({ icecream }) => {
             <span className='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700'>{score}/100 poeng</span>
           </div>
         </div>
-        {!voted && session ? <VoteCard id={id} setVoted={setVoted} loadScore={loadScore} user={session.user} /> : null}
+        {!voted && session ? <VoteCard id={id} setVoted={setVoted} user={session.user} /> : null}
         {highestVote && <HighestVote {...highestVote} />}
         {myVote && <ShowMyVote {...myVote} />}
         {!session && <LoginButton />}
         {session && <LoggedInCard user={session.user} />}
+        {error && <Error error={error} />}
       </div>
     </>
   )
