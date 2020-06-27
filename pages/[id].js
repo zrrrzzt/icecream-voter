@@ -15,34 +15,36 @@ import VoteCard from '../components/vote'
 const Details = ({ icecream }) => {
   const { id, name, producer, image } = icecream
   const [session] = useSession()
+  const [votes, setVotes] = useState([])
+  const [error, setError] = useState()
   const [score, setScore] = useState(0)
   const [voted, setVoted] = useState(false)
   const [myVote, setMyVote] = useState(false)
-  const [voters, setVoters] = useState(0)
   const [highestVote, setHighestVote] = useState()
-
-  const loadScore = () => {
-    FirestoreService.getVotes(id).then(votes => {
-      if (!votes.empty) {
-        const score = calculateScore(votes.docs)
-        setScore(score)
-        setVoters(votes.docs.length)
-        setHighestVote(getHighestVote(votes.docs))
-        if (session) {
-          const hasVoted = userHasVoted(session.user.email, votes.docs)
-          const myVote = getMyVote(session.user.email, votes.docs)
-          setVoted(hasVoted)
-          if (myVote) {
-            setMyVote(myVote)
-          }
-        }
-      }
-    }).catch(console.error)
-  }
+  const [voters, setVoters] = useState(0)
 
   useEffect(() => {
-    loadScore()
-  })
+    const unsubscribe = FirestoreService.streamVotes(id, {
+        next: querySnapshot => {
+            const updatedVotes = 
+                querySnapshot.docs.map(docSnapshot => docSnapshot.data())
+            setVotes(updatedVotes)
+            setScore(calculateScore(updatedVotes))
+            setVoters(updatedVotes.length)
+            setHighestVote(getHighestVote(updatedVotes))
+            if (session) {
+              const hasVoted = userHasVoted(session.user.email, updatedVotes)
+              const myVote = getMyVote(session.user.email, updatedVotes)
+              setVoted(hasVoted)
+              if (myVote) {
+                setMyVote(myVote)
+              }
+            }
+        },
+        error: () => setError('icecream-list-item-fail')
+    });
+    return unsubscribe;
+  }, [id, setVotes]);
 
   return (
     <>
@@ -61,7 +63,7 @@ const Details = ({ icecream }) => {
             <span className='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700'>{score}/100 poeng</span>
           </div>
         </div>
-        {!voted && session ? <VoteCard id={id} setVoted={setVoted} loadScore={loadScore} user={session.user} /> : null}
+        {!voted && session ? <VoteCard id={id} setVoted={setVoted} user={session.user} /> : null}
         {highestVote && <HighestVote {...highestVote} />}
         {myVote && <ShowMyVote {...myVote} />}
         {!session && <LoginButton />}
