@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useSession } from 'next-auth/client'
 import * as FirestoreService from '../lib/firestore-service'
 import getIcecream from '../lib/get-icecream'
@@ -21,7 +21,7 @@ const Details = ({ icecream }) => {
   const [voted, setVoted] = useState(false)
   const [myVote, setMyVote] = useState(false)
   const [highestVote, setHighestVote] = useState()
-  const [voters, setVoters] = useState(0)
+  const voters = useMemo(() => votes.length, [votes])
 
   useEffect(() => {
     const unsubscribe = FirestoreService.streamVotes(id, {
@@ -30,7 +30,6 @@ const Details = ({ icecream }) => {
                 querySnapshot.docs.map(docSnapshot => docSnapshot.data())
         setVotes(updatedVotes)
         setScore(calculateScore(updatedVotes))
-        setVoters(updatedVotes.length)
         setHighestVote(getHighestVote(updatedVotes))
         if (session) {
           const hasVoted = userHasVoted(session.user.email, updatedVotes)
