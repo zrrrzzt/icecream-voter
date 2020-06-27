@@ -6,6 +6,7 @@ import getHighestVote from '../lib/get-highest-vote'
 import calculateScore from '../lib/calculate-score'
 import userHasVoted from '../lib/has-voted'
 import getMyVote from '../lib/get-my-vote'
+import Error from '../components/error'
 import HighestVote from '../components/highest-vote'
 import LoginButton from '../components/login-button'
 import LoggedInCard from '../components/logged-in-card'
@@ -67,6 +68,7 @@ const Details = ({ icecream }) => {
         {myVote && <ShowMyVote {...myVote} />}
         {!session && <LoginButton />}
         {session && <LoggedInCard user={session.user} />}
+        {error && <Error error={error} />}
       </div>
     </>
   )
