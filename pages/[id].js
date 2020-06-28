@@ -8,8 +8,6 @@ import userHasVoted from '../lib/has-voted'
 import getMyVote from '../lib/get-my-vote'
 import Error from '../components/error'
 import HighestVote from '../components/highest-vote'
-import LoginButton from '../components/login-button'
-import LoggedInCard from '../components/logged-in-card'
 import ShowMyVote from '../components/show-my-vote'
 import VoteCard from '../components/vote'
 
@@ -64,7 +62,7 @@ const Details = ({ icecream }) => {
 
   return (
     <>
-      <div className='flex flex-col items-center'>
+      <div className='flex flex-col items-center mb-4'>
         <h1 className='text-4xl font-mono'>{name}</h1>
         <div className='max-w-sm rounded overflow-hidden shadow-lg'>
           <img className='w-full' src={`images/${image}`} alt={name} />
@@ -82,8 +80,6 @@ const Details = ({ icecream }) => {
         {!voted && session ? <VoteCard id={id} setVoted={setVoted} user={session.user} /> : null}
         {highestVote && <HighestVote {...highestVote} />}
         {myVote && <ShowMyVote {...myVote} />}
-        {!session && <LoginButton />}
-        {session && <LoggedInCard user={session.user} />}
         {error && <Error error={error} />}
       </div>
     </>
