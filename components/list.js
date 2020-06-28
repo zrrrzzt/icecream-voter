@@ -5,7 +5,7 @@ const ListItem = props => {
   return (
     <Link href={`/${id}`} key={id}>
       <a className='cursor-pointer'>
-        <div className='max-w-sm rounded overflow-hidden shadow-lg'>
+        <div className='max-w-sm rounded overflow-hidden shadow-lg mb-2'>
           <img className='w-full' src={`images/${image}`} alt={name} />
           <div className='px-6 py-4'>
             <div className='font-bold text-xl mb-2'>{name}</div>
