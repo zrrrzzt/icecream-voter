@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/zrrrzzt/icecream-voter#readme",
   "dependencies": {
-    "firebase": "7.15.4",
+    "firebase": "7.15.5",
     "next": "9.4.4",
     "next-auth": "2.1.0",
     "postcss-preset-env": "6.7.0",
