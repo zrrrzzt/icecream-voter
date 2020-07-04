@@ -2,14 +2,18 @@ import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/client'
 import * as FirestoreService from '../lib/firestore-service'
 import getIcecream from '../lib/get-icecream'
-import getHighestVote from '../lib/get-highest-vote'
 import calculateScore from '../lib/calculate-score'
 import userHasVoted from '../lib/has-voted'
 import getMyVote from '../lib/get-my-vote'
+import addTotalToScore from '../lib/add-total-to-score'
 import Error from '../components/error'
-import HighestVote from '../components/highest-vote'
 import ShowMyVote from '../components/show-my-vote'
 import VoteCard from '../components/vote'
+import Voter from '../components/voter'
+
+function totalSort (b, a) {
+  return a.total - b.total
+}
 
 const Voters = props => {
   const { voters } = props
@@ -37,15 +41,15 @@ const Details = ({ icecream }) => {
   const [error, setError] = useState()
   const [voted, setVoted] = useState(false)
   const [myVote, setMyVote] = useState(false)
-  const [highestVote, setHighestVote] = useState()
 
   useEffect(() => {
     const unsubscribe = FirestoreService.streamVotes(id, {
       next: querySnapshot => {
         const updatedVotes =
                 querySnapshot.docs.map(docSnapshot => docSnapshot.data())
-        setVotes(updatedVotes)
-        setHighestVote(getHighestVote(updatedVotes))
+        const votesWithTotals = addTotalToScore(updatedVotes)
+        votesWithTotals.sort(totalSort)
+        setVotes(votesWithTotals)
         if (session) {
           const hasVoted = userHasVoted(session.user.email, updatedVotes)
           const myVote = getMyVote(session.user.email, updatedVotes)
@@ -78,7 +82,7 @@ const Details = ({ icecream }) => {
           </div>
         </div>
         {!voted && session ? <VoteCard id={id} setVoted={setVoted} user={session.user} /> : null}
-        {highestVote && <HighestVote {...highestVote} />}
+        {votes.map((vote, index) => <Voter {...vote} key={index} />)}
         {myVote && <ShowMyVote {...myVote} />}
         {error && <Error error={error} />}
       </div>
