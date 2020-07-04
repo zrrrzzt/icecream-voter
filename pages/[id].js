@@ -4,10 +4,8 @@ import * as FirestoreService from '../lib/firestore-service'
 import getIcecream from '../lib/get-icecream'
 import calculateScore from '../lib/calculate-score'
 import userHasVoted from '../lib/has-voted'
-import getMyVote from '../lib/get-my-vote'
 import addTotalToScore from '../lib/add-total-to-score'
 import Error from '../components/error'
-import ShowMyVote from '../components/show-my-vote'
 import VoteCard from '../components/vote'
 import Voter from '../components/voter'
 
@@ -40,7 +38,6 @@ const Details = ({ icecream }) => {
   const [votes, setVotes] = useState([])
   const [error, setError] = useState()
   const [voted, setVoted] = useState(false)
-  const [myVote, setMyVote] = useState(false)
 
   useEffect(() => {
     const unsubscribe = FirestoreService.streamVotes(id, {
@@ -52,11 +49,7 @@ const Details = ({ icecream }) => {
         setVotes(votesWithTotals)
         if (session) {
           const hasVoted = userHasVoted(session.user.email, updatedVotes)
-          const myVote = getMyVote(session.user.email, updatedVotes)
           setVoted(hasVoted)
-          if (myVote) {
-            setMyVote(myVote)
-          }
         }
       },
       error: () => setError('icecream-list-item-fail')
@@ -82,8 +75,7 @@ const Details = ({ icecream }) => {
           </div>
         </div>
         {!voted && session ? <VoteCard id={id} setVoted={setVoted} user={session.user} /> : null}
-        {votes.map((vote, index) => <Voter {...vote} key={index} />)}
-        {myVote && <ShowMyVote {...myVote} />}
+        {votes.map((vote, index) => <Voter {...vote} key={index} session={session} />)}
         {error && <Error error={error} />}
       </div>
     </>
