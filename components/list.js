@@ -4,7 +4,7 @@ import * as FirestoreService from '../lib/firestore-service'
 import calculateScore from '../lib/calculate-score'
 
 const Score = props => {
-  const { score }   = props
+  const { score } = props
   return (
     <span className='inline-block bg-gray-200 rounded-full px-3 py-1 mr-2 text-sm font-semibold text-gray-700'>
       {score}/100
@@ -37,7 +37,7 @@ const ListItem = props => {
             </p>
           </div>
           <div className='flex justify-end px-6 py-4'>
-            { score && <Score score={score} />}
+            {score && <Score score={score} />}
             <span className='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700'>Vis detaljer</span>
           </div>
         </div>
