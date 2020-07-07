@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 const ListItem = props => {
   const { id, name, producer, image, score } = props
-  
+
   return (
     <Link href={`/${id}`}>
       <a className='cursor-pointer'>
