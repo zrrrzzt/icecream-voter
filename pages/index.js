@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/client'
 import * as FirestoreService from '../lib/firestore-service'
 import ListItem from '../components/list'
+import userHasVoted from '../lib/has-voted'
 import calculateScore from '../lib/calculate-score'
 const icecreams = require('../lib/data/icescreams.json')
 
@@ -8,19 +10,25 @@ function scoreSort (b, a) {
   return a.score - b.score
 }
 
+function checkUserVote (session, votes) {
+  return session ? userHasVoted(session.user.email, votes) : false
+}
+
 const HomePage = () => {
+  const [session] = useSession()
   const [data, setData] = useState([])
+
   useEffect(() => {
     (async () => {
       const jobs = icecreams.map(icecream => FirestoreService.getVotes(icecream.id))
       const results = await Promise.all(jobs)
       const allVotes = results.map(result => result.docs.map(doc => doc.data()))
       const scores = allVotes.map(vote => calculateScore(vote))
-      const icecreamData = icecreams.map((icecream, index) => Object.assign({}, icecream, { score: scores[index], votes: allVotes[index].length }))
+      const icecreamData = icecreams.map((icecream, index) => Object.assign({}, icecream, { score: scores[index], votes: allVotes[index].length, voted: checkUserVote(session, allVotes[index]), isLoggedIn: !!session }))
       icecreamData.sort(scoreSort)
       setData(icecreamData)
     })()
-  }, [icecreams, setData])
+  }, [icecreams, session, setData])
   return (
     <>
       <div className='flex flex-col items-center'>
