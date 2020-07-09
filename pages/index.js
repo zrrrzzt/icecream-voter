@@ -16,7 +16,7 @@ const HomePage = () => {
       const results = await Promise.all(jobs)
       const allVotes = results.map(result => result.docs.map(doc => doc.data()))
       const scores = allVotes.map(vote => calculateScore(vote))
-      const icecreamData = icecreams.map((icecream, index) => Object.assign({}, icecream, { score: scores[index] }))
+      const icecreamData = icecreams.map((icecream, index) => Object.assign({}, icecream, { score: scores[index], votes: allVotes[index].length }))
       icecreamData.sort(scoreSort)
       setData(icecreamData)
     })()
