@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/client'
+import { useToasts } from 'react-toast-notifications'
 import * as FirestoreService from '../lib/firestore-service'
 import getIcecream from '../lib/get-icecream'
 import calculateScore from '../lib/calculate-score'
@@ -38,6 +39,7 @@ const Details = ({ icecream }) => {
   const [votes, setVotes] = useState([])
   const [error, setError] = useState()
   const [voted, setVoted] = useState(false)
+  const { addToast } = useToasts()
 
   useEffect(() => {
     const unsubscribe = FirestoreService.streamVotes(id, {
@@ -45,7 +47,11 @@ const Details = ({ icecream }) => {
         const updatedVotes =
                 querySnapshot.docs.map(docSnapshot => docSnapshot.data())
         const votesWithTotals = addTotalToScore(updatedVotes)
+        const lastVote = votesWithTotals[votesWithTotals.length - 1]
         votesWithTotals.sort(totalSort)
+        if (lastVote) {
+          addToast(`${lastVote.name.split('.')[0]} ga ${Math.floor(lastVote.total / 5)} poeng`, {appearance: 'info'})
+        }
         setVotes(votesWithTotals)
         if (session) {
           const hasVoted = userHasVoted(session.user.email, updatedVotes)
