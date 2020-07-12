@@ -50,7 +50,7 @@ const Details = ({ icecream }) => {
         const lastVote = votesWithTotals[votesWithTotals.length - 1]
         votesWithTotals.sort(totalSort)
         if (lastVote) {
-          addToast(`${lastVote.name.split('.')[0]} ga ${Math.floor(lastVote.total / 5)} poeng`, {appearance: 'info'})
+          addToast(`${lastVote.name.split('.')[0]} ga ${Math.floor(lastVote.total / 5)} poeng`, { appearance: 'info' })
         }
         setVotes(votesWithTotals)
         if (session) {
