@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/client'
-import { useToasts } from 'react-toast-notifications'
+import cogoToast from 'cogo-toast'
 import * as FirestoreService from '../lib/firestore-service'
 import getIcecream from '../lib/get-icecream'
 import calculateScore from '../lib/calculate-score'
@@ -14,12 +14,12 @@ function totalSort (b, a) {
   return a.total - b.total
 }
 
-function timeSort (b, a) {
+function timeSort (a, b) {
   return a.timeStamp - b.timeStamp
 }
 
 function getTimestamp (snapshot) {
-  return snapshot.Ud.version.timestamp.nanoseconds
+  return snapshot.Ud.version.timestamp.seconds
 }
 
 const Voters = props => {
@@ -47,7 +47,6 @@ const Details = ({ icecream }) => {
   const [votes, setVotes] = useState([])
   const [error, setError] = useState()
   const [voted, setVoted] = useState(false)
-  const { addToast } = useToasts()
 
   useEffect(() => {
     const unsubscribe = FirestoreService.streamVotes(id, {
@@ -55,12 +54,13 @@ const Details = ({ icecream }) => {
         const updatedVotes =
                 querySnapshot.docs.map(docSnapshot => Object.assign({}, docSnapshot.data(), { timeStamp: getTimestamp(docSnapshot) }))
         const votesWithTotals = addTotalToScore(updatedVotes)
-        votesWithTotals.sort(timeSort)
-        const lastVote = votesWithTotals[votesWithTotals.length - 1]
-        votesWithTotals.sort(totalSort)
-        if (lastVote) {
-          addToast(`${lastVote.name.split('.')[0]} ga ${Math.floor(lastVote.total / 5)} poeng`, { appearance: 'info' })
+        if (votesWithTotals.length > 0) {
+          const lastVote = votesWithTotals.sort(timeSort)[votesWithTotals.length - 1]
+          console.log(votesWithTotals[votesWithTotals.length - 1])
+          const msg = `${lastVote.name.split('.')[0]} ga ${Math.floor(lastVote.total / 5)} poeng`
+          cogoToast.info(msg)
         }
+        votesWithTotals.sort(totalSort)
         setVotes(votesWithTotals)
         if (session) {
           const hasVoted = userHasVoted(session.user.email, updatedVotes)
@@ -70,7 +70,7 @@ const Details = ({ icecream }) => {
       error: () => setError('icecream-list-item-fail')
     })
     return unsubscribe
-  }, [addToast, id, session, setVotes])
+  }, [cogoToast, id, session, setVotes, setVoted])
 
   return (
     <>
