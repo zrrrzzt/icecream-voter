@@ -70,7 +70,7 @@ const Details = ({ icecream }) => {
       error: () => setError('icecream-list-item-fail')
     })
     return unsubscribe
-  }, [id, setVotes, session])
+  }, [addToast, id, session, setVotes])
 
   return (
     <>
