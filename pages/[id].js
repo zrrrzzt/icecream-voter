@@ -14,6 +14,14 @@ function totalSort (b, a) {
   return a.total - b.total
 }
 
+function timeSort (b, a) {
+  return a.timeStamp - b.timeStamp
+}
+
+function getTimestamp (snapshot) {
+  return snapshot.Ud.version.timestamp.nanoseconds
+}
+
 const Voters = props => {
   const { voters } = props
   return (
@@ -45,8 +53,9 @@ const Details = ({ icecream }) => {
     const unsubscribe = FirestoreService.streamVotes(id, {
       next: querySnapshot => {
         const updatedVotes =
-                querySnapshot.docs.map(docSnapshot => docSnapshot.data())
+                querySnapshot.docs.map(docSnapshot => Object.assign({}, docSnapshot.data(), { timeStamp: getTimestamp(docSnapshot) }))
         const votesWithTotals = addTotalToScore(updatedVotes)
+        votesWithTotals.sort(timeSort)
         const lastVote = votesWithTotals[votesWithTotals.length - 1]
         votesWithTotals.sort(totalSort)
         if (lastVote) {
