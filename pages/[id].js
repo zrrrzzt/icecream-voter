@@ -22,6 +22,10 @@ function getTimestamp (snapshot) {
   return snapshot.Ud.version.timestamp.seconds
 }
 
+function extractDocument (docSnapshot) {
+  return Object.assign({}, docSnapshot.data(), { timeStamp: getTimestamp(docSnapshot) })
+}
+
 const Voters = props => {
   const { voters } = props
   return (
@@ -52,11 +56,10 @@ const Details = ({ icecream }) => {
     const unsubscribe = FirestoreService.streamVotes(id, {
       next: querySnapshot => {
         const updatedVotes =
-                querySnapshot.docs.map(docSnapshot => Object.assign({}, docSnapshot.data(), { timeStamp: getTimestamp(docSnapshot) }))
+                querySnapshot.docs.map(extractDocument)
         const votesWithTotals = addTotalToScore(updatedVotes)
         if (votesWithTotals.length > 0) {
           const lastVote = votesWithTotals.sort(timeSort)[votesWithTotals.length - 1]
-          console.log(votesWithTotals[votesWithTotals.length - 1])
           const msg = `${lastVote.name.split('.')[0]} ga ${Math.floor(lastVote.total / 5)} poeng`
           cogoToast.info(msg)
         }
@@ -70,7 +73,7 @@ const Details = ({ icecream }) => {
       error: () => setError('icecream-list-item-fail')
     })
     return unsubscribe
-  }, [cogoToast, id, session, setVotes, setVoted])
+  }, [cogoToast, id, session, setVotes, setVoted, extractDocument])
 
   return (
     <>
