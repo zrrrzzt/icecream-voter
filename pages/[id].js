@@ -5,7 +5,7 @@ import * as FirestoreService from '../lib/firestore-service'
 import getIcecream from '../lib/get-icecream'
 import calculateScore from '../lib/calculate-score'
 import userHasVoted from '../lib/has-voted'
-import addTotalToScore from '../lib/add-total-to-score'
+import extractDocument from '../lib/extract-document'
 import Error from '../components/error'
 import VoteCard from '../components/vote'
 import Voter from '../components/voter'
@@ -16,14 +16,6 @@ function totalSort (b, a) {
 
 function timeSort (a, b) {
   return a.timeStamp - b.timeStamp
-}
-
-function getTimestamp (snapshot) {
-  return snapshot.Ud.version.timestamp.seconds
-}
-
-function extractDocument (docSnapshot) {
-  return Object.assign({}, docSnapshot.data(), { timeStamp: getTimestamp(docSnapshot) })
 }
 
 const Voters = props => {
@@ -55,16 +47,14 @@ const Details = ({ icecream }) => {
   useEffect(() => {
     const unsubscribe = FirestoreService.streamVotes(id, {
       next: querySnapshot => {
-        const updatedVotes =
-                querySnapshot.docs.map(extractDocument)
-        const votesWithTotals = addTotalToScore(updatedVotes)
-        if (votesWithTotals.length > 0) {
-          const lastVote = votesWithTotals.sort(timeSort)[votesWithTotals.length - 1]
-          const msg = `${lastVote.name.split('.')[0]} ga ${Math.floor(lastVote.total / 5)} poeng`
+        const updatedVotes = querySnapshot.docs.map(extractDocument)
+        if (updatedVotes.length > 0) {
+          const lastVote = updatedVotes.sort(timeSort)[updatedVotes.length - 1]
+          const msg = `${lastVote.name.split('.')[0]} ga ${(lastVote.total)} poeng`
           cogoToast.info(msg)
         }
-        votesWithTotals.sort(totalSort)
-        setVotes(votesWithTotals)
+        updatedVotes.sort(totalSort)
+        setVotes(updatedVotes)
         if (session) {
           const hasVoted = userHasVoted(session.user.email, updatedVotes)
           setVoted(hasVoted)

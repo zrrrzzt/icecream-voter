@@ -9,7 +9,7 @@ const MyVote = props => {
           </div>
           <div className='flex flex-col'>
             <span className='text-right'>{name.split('.')[0]}</span>
-            <span className='font-bold text-right'>{Math.floor(total / 5)}/100 poeng</span>
+            <span className='font-bold text-right'>{total}/100 poeng</span>
           </div>
         </div>
         <div className='flex justify-between bg-pink-100'>
@@ -48,7 +48,7 @@ const OtherVote = props => {
           </div>
           <div className='flex flex-col'>
             <span className='text-right'>{name.split('.')[0]}</span>
-            <span className='font-bold text-right'>{Math.floor(total / 5)}/100 poeng</span>
+            <span className='font-bold text-right'>{total}/100 poeng</span>
           </div>
         </div>
       </div>
