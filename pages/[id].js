@@ -92,14 +92,14 @@ const Details = ({ icecream }) => {
   )
 }
 
-export async function getStaticPaths() {
+export async function getStaticPaths () {
   const paths = icecreams.map(icecream => ({
-    params: { id: icecream.id },
+    params: { id: icecream.id }
   }))
   return { paths, fallback: false }
 }
 
-export async function getStaticProps({ params }) {
+export async function getStaticProps ({ params }) {
   const icecream = getIcecream(params.id)
 
   return { props: { icecream } }
