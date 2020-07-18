@@ -10,6 +10,8 @@ import Error from '../components/error'
 import VoteCard from '../components/vote'
 import Voter from '../components/voter'
 
+const icecreams = require('../lib/data/icescreams.json')
+
 function totalSort (b, a) {
   return a.total - b.total
 }
@@ -90,12 +92,17 @@ const Details = ({ icecream }) => {
   )
 }
 
-Details.getInitialProps = async ({ req }) => {
-  const path = req ? req.url : window.location.pathname
-  const list = path.split('/')
-  const id = list.length > 0 ? list.pop() : '5ac0f9e3-e94b-48b8-93d9-1d932fc6d3d9'
-  const icecream = getIcecream(id)
-  return { icecream }
+export async function getStaticPaths() {
+  const paths = icecreams.map(icecream => ({
+    params: { id: icecream.id },
+  }))
+  return { paths, fallback: false }
+}
+
+export async function getStaticProps({ params }) {
+  const icecream = getIcecream(params.id)
+
+  return { props: { icecream } }
 }
 
 export default Details
