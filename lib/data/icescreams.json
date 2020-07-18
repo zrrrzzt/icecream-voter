@@ -1,5 +1,12 @@
 [
   {
+    "id": "14bd6f80-7b7d-4bf5-800b-23dfabbe35cb",
+    "name": "Magnum Ruby",
+    "producer": "Magnum",
+    "url": "https://www.magnumicecream.no",
+    "image": "magnum-ruby.jpg"
+  },
+  {
     "id": "bbd26b4e-6452-45c2-8bd8-03a4ee9e30d0",
     "name": "Lakrispinne",
     "producer": "Isbjørn Is",
