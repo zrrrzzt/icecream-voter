@@ -47,6 +47,15 @@ const Details = ({ icecream }) => {
   const [voted, setVoted] = useState(false)
 
   useEffect(() => {
+    try {
+      FirestoreService.authenticateAnonymously()
+      console.log('auth ok')
+    } catch (error) {
+      console.error(error.message)
+    }
+  }, [])
+
+  useEffect(() => {
     const unsubscribe = FirestoreService.streamVotes(id, {
       next: querySnapshot => {
         const updatedVotes = querySnapshot.docs.map(extractDocument)
