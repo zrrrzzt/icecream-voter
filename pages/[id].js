@@ -47,8 +47,10 @@ const Details = ({ icecream }) => {
   const [voted, setVoted] = useState(false)
 
   useEffect(() => {
-    FirestoreService.authenticateAnonymously()
-  }, [])
+    if (session) {
+      FirestoreService.authenticateAnonymously()
+    }
+  }, [session])
 
   useEffect(() => {
     const unsubscribe = FirestoreService.streamVotes(id, {
