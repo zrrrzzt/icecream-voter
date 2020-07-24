@@ -45,6 +45,7 @@ const Details = ({ icecream }) => {
   const [votes, setVotes] = useState([])
   const [error, setError] = useState()
   const [voted, setVoted] = useState(false)
+  const [toastMsg, setToastMsg] = useState()
 
   useEffect(() => {
     if (session) {
@@ -56,11 +57,6 @@ const Details = ({ icecream }) => {
     const unsubscribe = FirestoreService.streamVotes(id, {
       next: querySnapshot => {
         const updatedVotes = querySnapshot.docs.map(extractDocument)
-        if (updatedVotes.length > 0) {
-          const lastVote = updatedVotes.sort(timeSort)[updatedVotes.length - 1]
-          const msg = `${lastVote.name.split('.')[0]} ga ${(lastVote.total)} poeng`
-          cogoToast.info(msg)
-        }
         updatedVotes.sort(totalSort)
         setVotes(updatedVotes)
         if (session) {
@@ -72,6 +68,23 @@ const Details = ({ icecream }) => {
     })
     return unsubscribe
   }, [cogoToast, id, session, setVotes, setVoted, extractDocument])
+
+  useEffect(() => {
+    if (votes.length > 0) {
+      const votesCopy = [...votes]
+      const lastVote = votesCopy.sort(timeSort)[votesCopy.length - 1]
+      const msg = `${lastVote.name.split('.')[0]} ga ${(lastVote.total)} poeng`
+      if (toastMsg !== msg) {
+        setToastMsg(msg)
+      }
+    }
+  }, [votes, toastMsg])
+
+  useEffect(() => {
+    if (toastMsg) {
+      cogoToast.info(toastMsg)
+    }
+  }, [toastMsg])
 
   return (
     <>
