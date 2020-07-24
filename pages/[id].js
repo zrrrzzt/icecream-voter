@@ -67,7 +67,7 @@ const Details = ({ icecream }) => {
       error: () => setError('icecream-list-item-fail')
     })
     return unsubscribe
-  }, [cogoToast, id, session, setVotes, setVoted, extractDocument])
+  }, [session])
 
   useEffect(() => {
     if (votes.length > 0) {
