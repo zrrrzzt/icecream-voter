@@ -10,8 +10,6 @@ import Error from '../components/error'
 import VoteCard from '../components/vote'
 import Voter from '../components/voter'
 
-const icecreams = require('../lib/data/icescreams.json')
-
 function totalSort (b, a) {
   return a.total - b.total
 }
@@ -112,9 +110,11 @@ const Details = ({ icecream }) => {
 }
 
 export async function getStaticPaths () {
+  const icecreams = require('../lib/data/icescreams.json')
   const paths = icecreams.map(icecream => ({
     params: { id: icecream.id }
   }))
+  
   return { paths, fallback: false }
 }
 
