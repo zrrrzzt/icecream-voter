@@ -28,7 +28,7 @@ const HomePage = () => {
       icecreamData.sort(scoreSort)
       setData(icecreamData)
     })()
-  }, [icecreams, session, setData])
+  }, [session])
   return (
     <>
       <div className='flex flex-col items-center'>
