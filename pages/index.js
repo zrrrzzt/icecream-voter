@@ -16,7 +16,7 @@ function checkUserVote (session, votes) {
 
 const HomePage = () => {
   const [session] = useSession()
-  const [data, setData] = useState([])
+  const [data, setData] = useState(icecreams)
 
   useEffect(() => {
     (async () => {
