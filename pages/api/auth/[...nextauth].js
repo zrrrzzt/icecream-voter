@@ -4,7 +4,6 @@ import Providers from 'next-auth/providers'
 // For more information on options, go to
 // https://next-auth.js.org/configuration/options
 const options = {
-  site: process.env.SITE,
   providers: [
     Providers.Auth0({
       clientId: process.env.AUTH0_ID,
