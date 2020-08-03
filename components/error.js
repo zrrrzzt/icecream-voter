@@ -1,4 +1,4 @@
-export default props => {
+const Error = props => {
   const { error } = props
   return (
     <div>
@@ -6,3 +6,5 @@ export default props => {
     </div>
   )
 }
+
+export default Error
