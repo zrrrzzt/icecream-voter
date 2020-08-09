@@ -14,7 +14,7 @@ const ListItem = props => {
             </p>
           </div>
           <div className='flex justify-end px-6 py-4'>
-            <span className='inline-block bg-gray-200 rounded-full px-3 py-1 mr-2 text-sm font-semibold text-gray-700'>{votes || 0} stemmer</span>
+  <span className='inline-block bg-gray-200 rounded-full px-3 py-1 mr-2 text-sm font-semibold text-gray-700'>{votes || 0} {votes && votes === 1 ? 'stemme' : 'stemmer'}</span>
             <span className='inline-block bg-gray-200 rounded-full px-3 py-1 mr-2 text-sm font-semibold text-gray-700'>{score || 0}/100</span>
             <span className='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700'>{!isLoggedIn ? 'Vis detaljer' : voted ? 'Vis resultat' : 'Gi din stemme'}</span>
           </div>
