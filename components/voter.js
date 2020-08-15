@@ -56,7 +56,9 @@ const OtherVote = props => {
   )
 }
 
-export default props => {
+const Voter = props => {
   const { session, user } = props
   return session && session.user.email === user ? <MyVote {...props} /> : <OtherVote {...props} />
 }
+
+export default Voter
