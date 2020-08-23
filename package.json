@@ -3,6 +3,7 @@
   "version": "2.0.5",
   "description": "Rate your icecream",
   "main": "index.js",
+  "private": true,
   "scripts": {
     "test": "standard && ava",
     "dev": "next",
