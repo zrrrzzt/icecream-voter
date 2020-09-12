@@ -1,6 +1,6 @@
 import { signIn, signOut, useSession } from 'next-auth/client'
 
-export default () => {
+const Menu = () => {
   const [session] = useSession()
 
   const handleFrontPage = () => {
@@ -42,3 +42,5 @@ export default () => {
     </nav>
   )
 }
+
+export default Menu
