@@ -26,7 +26,7 @@
   "dependencies": {
     "cogo-toast": "4.2.3",
     "firebase": "8.2.10",
-    "next": "10.0.7",
+    "next": "10.0.8",
     "next-auth": "3.10.0",
     "postcss-preset-env": "6.7.0",
     "react": "17.0.1",
