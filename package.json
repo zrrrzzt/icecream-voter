@@ -25,7 +25,7 @@
   "homepage": "https://github.com/zrrrzzt/icecream-voter#readme",
   "dependencies": {
     "cogo-toast": "4.2.3",
-    "firebase": "8.6.7",
+    "firebase": "8.6.8",
     "next": "10.2.3",
     "next-auth": "3.27.0",
     "postcss-preset-env": "6.7.0",
